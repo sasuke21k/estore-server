@@ -5,6 +5,7 @@ const products = express.Router();
 products.get("/",(req,res)=>{
    const mainCategoryId = req.query.maincategoryid;
     const subCategoryId = req.query.subcategoryid;
+    const keyword = req.query.keyword;
 
     let query = "select * from products";
     let queryParams = [];
@@ -13,6 +14,10 @@ products.get("/",(req,res)=>{
         query=`select products.* from products join categories on  
         products.category_id = categories.id where categories.parent_category_id = ?`;
         queryParams.push(mainCategoryId);
+
+        if(keyword){
+         query += ` AND keywords LIKE '%${keyword}%'`;
+        }
     }else if(subCategoryId){
         query +=" WHERE category_id = ?";
         queryParams.push(subCategoryId);
